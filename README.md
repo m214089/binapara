@@ -1,2 +1,2 @@
 # binapara
-Two-component particle formation nucleation parameterizations (Määttänen et al. 2017)
+Two-component neutral and ion-induced particle formation parameterizations (Määttänen et al. 2017)
