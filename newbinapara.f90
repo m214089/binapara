@@ -2,16 +2,17 @@ Program newbinapara_test_driver
 
   !    A Fortran 90 test driver for the parameterization
   !
-  !    Copyright (C)2016 Määttänen et al. 2016
+  !    Copyright (C)2018 Määttänen et al. 2018
   !    
   !    anni.maattanen@latmos.ipsl.fr
   !    joonas.merikanto@fmi.fi
   !    hanna.vehkamaki@helsinki.fi
   !
   !    References
-  !
-  !    Nieminen, T., Lehtinen, K. E. J., and Kulmala, 
-  !    Atmos. Chem. Phys., 10, 9773-9779, doi:10.5194/acp-10-9773-2010, 2010. 
+  !    A. Määttänen, J. Merikanto, H. Henschel, J. Duplissy, R. Makkonen, 
+  !    I. K. Ortega and H. Vehkamäki (2018), New parameterizations for 
+  !    neutral and ion-induced sulfuric acid-water particle formation in 
+  !    nucleation and kinetic regimes, J. Geophys. Res. Atmos., 122, doi:10.1002/2017JD027429.
   !
   !    Lehtinen, K. E., Dal Maso, M., Kulmala, M., and Kerminen, V. M., 
   !    Journal of Aerosol Science, 38(9), 988-994, 2007
@@ -104,14 +105,17 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
   !    The code calculates also the kinetic limit and the particle formation rate
   !    above this limit (in which case we set ntot=1 and na=1)
   !
-  !    Copyright (C)2016 Määttänen et al. 2016
-  !
+  !    Copyright (C)2018 Määttänen et al. 2018
   !    
   !    anni.maattanen@latmos.ipsl.fr
   !    joonas.merikanto@fmi.fi
   !    hanna.vehkamaki@helsinki.fi
-  ! 
-  !    References:
+  !
+  !    References
+  !    A. Määttänen, J. Merikanto, H. Henschel, J. Duplissy, R. Makkonen, 
+  !    I. K. Ortega and H. Vehkamäki (2018), New parameterizations for 
+  !    neutral and ion-induced sulfuric acid-water particle formation in 
+  !    nucleation and kinetic regimes, J. Geophys. Res. Atmos., 122, doi:10.1002/2017JD027429.
   !
   !    Brasseur, G., and A.  Chatel (1983),  paper  presented  at  the  9th  Annual  Meeting  of  the  
   !    European Geophysical Society, Leeds, Great Britain, August 1982.
@@ -239,13 +243,19 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
   !Critical cluster composition (valid for both cases, bounds not used here) 
-  x  =  7.9036365428891719e-1 - 2.8414059650092153e-3*t + 1.4976802556584141e-2*LOG(satrat) &
-       & - 2.4511581740839115e-4*t*LOG(satrat) + 3.4319869471066424e-3 *LOG(satrat)**2     &  
-       & - 2.8799393617748428e-5*t*LOG(satrat)**2 + 3.0174314126331765e-4*LOG(satrat)**3 & 
-       & - 2.2673492408841294e-6*t*LOG(satrat)**3 - 4.3948464567032377e-3*LOG(rhoa)&
-       & + 5.3305314722492146e-5*t*LOG(rhoa)
-  x_n=  x
-  x_i=  x
+  x_n=  7.9036365428891719e-1 - 2.8414059650092153e-3*tln + 1.4976802556584141e-2*LOG(satratln) &
+       & - 2.4511581740839115e-4*tln*LOG(satratln) + 3.4319869471066424e-3 *LOG(satratln)**2     &  
+       & - 2.8799393617748428e-5*tln*LOG(satratln)**2 + 3.0174314126331765e-4*LOG(satratln)**3 & 
+       & - 2.2673492408841294e-6*tln*LOG(satratln)**3 - 4.3948464567032377e-3*LOG(rhoaln)&
+       & + 5.3305314722492146e-5*tln*LOG(rhoaln)
+  x_i=  7.9036365428891719e-1 - 2.8414059650092153e-3*tli + 1.4976802556584141e-2*LOG(satratli) &
+       & - 2.4511581740839115e-4*tli*LOG(satratli) + 3.4319869471066424e-3 *LOG(satratli)**2     &  
+       & - 2.8799393617748428e-5*tli*LOG(satratli)**2 + 3.0174314126331765e-4*LOG(satratli)**3 & 
+       & - 2.2673492408841294e-6*tli*LOG(satratli)**3 - 4.3948464567032377e-3*LOG(rhoali)&
+       & + 5.3305314722492146e-5*tli*LOG(rhoali)
+       
+  x_n=MIN(MAX(x_n,1.e-30),1.) 
+  x_i=MIN(MAX(x_i,1.e-30),1.) 
   
   !Neutral nucleation
   
@@ -284,81 +294,81 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
      rc_n=0.3E-9
   else
      jnuc_n= 2.1361182605986115e-1 + 3.3827029855551838 *tln -3.2423555796175563e-2*tln**2 +  &
-          &  7.0120069477221989e-5*tln**3 +8.0286874752695141/x +  &
+          &  7.0120069477221989e-5*tln**3 +8.0286874752695141/x_n +  &
           &  -2.6939840579762231e-1*LOG(satratln) +1.6079879299099518*tln*LOG(satratln) +  &
           &  -1.9667486968141933e-2*tln**2*LOG(satratln) +  &
-          &  5.5244755979770844e-5*tln**3*LOG(satratln) + (7.8884704837892468*LOG(satratln))/x +  &
+          &  5.5244755979770844e-5*tln**3*LOG(satratln) + (7.8884704837892468*LOG(satratln))/x_n +  &
           &  4.6374659198909596*LOG(satratln)**2 - 8.2002809894792153e-2*tln*LOG(satratln)**2 +  &
           &  8.5077424451172196e-4*tln**2*LOG(satratln)**2 +  &
           &  -2.6518510168987462e-6*tln**3*LOG(satratln)**2 +  &
-          &  (-1.4625482500575278*LOG(satratln)**2)/x - 5.2413002989192037e-1*LOG(satratln)**3 +  &
+          &  (-1.4625482500575278*LOG(satratln)**2)/x_n - 5.2413002989192037e-1*LOG(satratln)**3 +  &
           &  5.2755117653715865e-3*tln*LOG(satratln)**3 +  &
           &  -2.9491061332113830e-6*tln**2*LOG(satratln)**3 +  &
           &  -2.4815454194486752e-8*tln**3*LOG(satratln)**3 +  &
-          &  (-5.2663760117394626e-2*LOG(satratln)**3)/x +  &
+          &  (-5.2663760117394626e-2*LOG(satratln)**3)/x_n +  &
           &  1.6496664658266762*LOG(rhoaln) +  &
           &  -8.0809397859218401e-1*tln*LOG(rhoaln) +  &
           &  8.9302927091946642e-3*tln**2*LOG(rhoaln) +  &
           &  -1.9583649496497497e-5*tln**3*LOG(rhoaln) +  &
-          &  (-8.9505572676891685*LOG(rhoaln))/x +  &
+          &  (-8.9505572676891685*LOG(rhoaln))/x_n +  &
           &  -3.0025283601622881e+1*LOG(satratln)*LOG(rhoaln) +  &
           &  3.0783365644763633e-1*tln*LOG(satratln)*LOG(rhoaln) +  &
           &  -7.4521756337984706e-4*tln**2*LOG(satratln)*LOG(rhoaln) +  &
           &  -5.7651433870681853e-7*tln**3*LOG(satratln)*LOG(rhoaln) +  &
-          &  (1.2872868529673207*LOG(satratln)*LOG(rhoaln))/x +  &
+          &  (1.2872868529673207*LOG(satratln)*LOG(rhoaln))/x_n +  &
           &  -6.1739867501526535e-1*LOG(satratln)**2*LOG(rhoaln) +  &
           &  7.2347385705333975e-3*tln*LOG(satratln)**2*LOG(rhoaln) +  &
           &  -3.0640494530822439e-5*tln**2*LOG(satratln)**2*LOG(rhoaln) +  &
           &  6.5944609194346214e-8*tln**3*LOG(satratln)**2*LOG(rhoaln) +  &
-          &  (-2.8681650332461055e-2*LOG(satratln)**2*LOG(rhoaln))/x +  &
+          &  (-2.8681650332461055e-2*LOG(satratln)**2*LOG(rhoaln))/x_n +  &
           &  6.5213802375160306*LOG(rhoaln)**2 +  &
           &  -4.7907162004793016e-2*tln*LOG(rhoaln)**2 +  &
           &  -1.0727890114215117e-4*tln**2*LOG(rhoaln)**2 +  &
           &  5.6401818280534507e-7*tln**3*LOG(rhoaln)**2 +  &
-          &  (5.4113070888923009e-1*LOG(rhoaln)**2)/x +  &
+          &  (5.4113070888923009e-1*LOG(rhoaln)**2)/x_n +  &
           &  5.2062808476476330e-1*LOG(satratln)*LOG(rhoaln)**2 +  &
           &  -6.0696882500824584e-3*tln*LOG(satratln)*LOG(rhoaln)**2 +  &
           &  2.3851383302608477e-5*tln**2*LOG(satratln)*LOG(rhoaln)**2 +  &
           &  -1.5243837103067096e-8*tln**3*LOG(satratln)*LOG(rhoaln)**2 +  &
-          &  (-5.6543192378015687e-2*LOG(satratln)*LOG(rhoaln)**2)/x +  &
+          &  (-5.6543192378015687e-2*LOG(satratln)*LOG(rhoaln)**2)/x_n +  &
           &  -1.1630806410696815e-1*LOG(rhoaln)**3 +  &
           &  1.3806404273119610e-3*tln*LOG(rhoaln)**3 +  &
           &  -2.0199865087650833e-6*tln**2*LOG(rhoaln)**3 +  &
           &  -3.0200284885763192e-9*tln**3*LOG(rhoaln)**3 +  &
-          &  (-6.9425267104126316e-3*LOG(rhoaln)**3)/x
+          &  (-6.9425267104126316e-3*LOG(rhoaln)**3)/x_n
      jnuc_n=EXP(jnuc_n) 
      
      ntot_n =-3.5863435141979573e-3 - 1.0098670235841110e-1 *tln + 8.9741268319259721e-4 *tln**2 - 1.4855098605195757e-6*tln**3 &
-          &   - 1.2080330016937095e-1/x + 1.1902674923928015e-3*LOG(satratln) - 1.9211358507172177e-2*tln*LOG(satratln) +  &
+          &   - 1.2080330016937095e-1/x_n + 1.1902674923928015e-3*LOG(satratln) - 1.9211358507172177e-2*tln*LOG(satratln) +  &
           &   2.4648094311204255e-4*tln**2*LOG(satratln) - 7.5641448594711666e-7*tln**3*LOG(satratln) +  &
-          &   (-2.0668639384228818e-02*LOG(satratln))/x - 3.7593072011595188e-2*LOG(satratln)**2 + &
+          &   (-2.0668639384228818e-02*LOG(satratln))/x_n - 3.7593072011595188e-2*LOG(satratln)**2 + &
           &   9.0993182774415718e-4 *tln*LOG(satratln)**2 +&
           &   -9.5698412164297149e-6*tln**2*LOG(satratln)**2 + 3.7163166416110421e-8*tln**3*LOG(satratln)**2 +  &
-          &   (1.1026579525210847e-2*LOG(satratln)**2)/x + 1.1530844115561925e-2 *LOG(satratln)**3 +  &
+          &   (1.1026579525210847e-2*LOG(satratln)**2)/x_n + 1.1530844115561925e-2 *LOG(satratln)**3 +  &
           &   - 1.8083253906466668e-4 *tln*LOG(satratln)**3 + 8.0213604053330654e-7*tln**2*LOG(satratln)**3 +  &
-          &   -8.5797885383051337e-10*tln**3*LOG(satratln)**3 + (1.0243693899717402e-3*LOG(satratln)**3)/x +  &
+          &   -8.5797885383051337e-10*tln**3*LOG(satratln)**3 + (1.0243693899717402e-3*LOG(satratln)**3)/x_n +  &
           &   -1.7248695296299649e-2*LOG(rhoaln) + 1.1294004162437157e-2*tln*LOG(rhoaln) +  &
           &   -1.2283640163189278e-4*tln**2*LOG(rhoaln) + 2.7391732258259009e-7*tln**3*LOG(rhoaln) +  &
-          &   (6.8505583974029602e-2*LOG(rhoaln))/x +2.9750968179523635e-1*LOG(satratln)*LOG(rhoaln) +  &
+          &   (6.8505583974029602e-2*LOG(rhoaln))/x_n +2.9750968179523635e-1*LOG(satratln)*LOG(rhoaln) +  &
           &   -3.6681154503992296e-3 *tln*LOG(satratln)*LOG(rhoaln) + 1.0636473034653114e-5*tln**2*LOG(satratln)*LOG(rhoaln) +  &
-          &   5.8687098466515866e-9*tln**3*LOG(satratln)*LOG(rhoaln) + (-5.2028866094191509e-3*LOG(satratln)*LOG(rhoaln))/x +  &
+          &   5.8687098466515866e-9*tln**3*LOG(satratln)*LOG(rhoaln) + (-5.2028866094191509e-3*LOG(satratln)*LOG(rhoaln))/x_n +  &
           &   7.6971988880587231e-4*LOG(satratln)**2*LOG(rhoaln) - 2.4605575820433763e-5*tln*LOG(satratln)**2*LOG(rhoaln) +  &
           &   2.3818484400893008e-7*tln**2*LOG(satratln)**2*LOG(rhoaln) +  &
           &   -8.8474102392445200e-10*tln**3*LOG(satratln)**2*LOG(rhoaln) +  &
-          &   (-1.6640566678168968e-4*LOG(satratln)**2*LOG(rhoaln))/x - 7.7390093776705471e-2*LOG(rhoaln)**2 +  &
+          &   (-1.6640566678168968e-4*LOG(satratln)**2*LOG(rhoaln))/x_n - 7.7390093776705471e-2*LOG(rhoaln)**2 +  &
           &   5.8220163188828482e-4*tln*LOG(rhoaln)**2 + 1.2291679321523287e-6*tln**2*LOG(rhoaln)**2 +  &
-          &   -7.4690997508075749e-9*tln**3*LOG(rhoaln)**2 + (-5.6357941220497648e-3*LOG(rhoaln)**2)/x +  &
+          &   -7.4690997508075749e-9*tln**3*LOG(rhoaln)**2 + (-5.6357941220497648e-3*LOG(rhoaln)**2)/x_n +  &
           &   -4.7170109625089768e-3*LOG(satratln)*LOG(rhoaln)**2 + 6.9828868534370193e-5*tln*LOG(satratln)*LOG(rhoaln)**2 +  &
           &   -3.1738912157036403e-7*tln**2*LOG(satratln)*LOG(rhoaln)**2 +  &
           &   2.3975538706787416e-10*tln**3*LOG(satratln)*LOG(rhoaln)**2 +  &
-          &   (4.2304213386288567e-4*LOG(satratln)*LOG(rhoaln)**2)/x + 1.3696520973423231e-3*LOG(rhoaln)**3 +  &
+          &   (4.2304213386288567e-4*LOG(satratln)*LOG(rhoaln)**2)/x_n + 1.3696520973423231e-3*LOG(rhoaln)**3 +  &
           &   -1.6863387574788199e-5*tln*LOG(rhoaln)**3 + 2.7959499278844516e-8*tln**2*LOG(rhoaln)**3 +  &
-          &   3.9423927013227455e-11*tln**3*LOG(rhoaln)**3 + (8.6136359966337272e-5*LOG(rhoaln)**3)/x
+          &   3.9423927013227455e-11*tln**3*LOG(rhoaln)**3 + (8.6136359966337272e-5*LOG(rhoaln)**3)/x_n
      ntot_n=EXP(ntot_n)
      
-     rc_n=EXP(-22.378268374023630+0.44462953606125100*x+0.33499495707849131*LOG(ntot_n)) !in meters
+     rc_n=EXP(-22.378268374023630+0.44462953606125100*x_n+0.33499495707849131*LOG(ntot_n)) !in meters
      
-     na_n=x*ntot_n
+     na_n=x_n*ntot_n
      if (na_n .lt. 1.) then
         print *, 'Warning: number of acid molecules < 1 in nucleation regime, setting na_n=1'
         na_n=1.0
@@ -569,7 +579,7 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
              & (6.7565715216420310e-13 +  tli * -3.5421162549480807e-15 +  (tli**2) * -3.4201196868693569e-18 + &
              & (tli**3) * 2.2260187650412392e-20)* LOG(satratli)**3 * LOG(rhoali)
                     
-        na_i=x*ntot_i
+        na_i=x_i*ntot_i
         if (na_i .lt. 1.) then
            print *, 'Warning: number of acid molecules < 1 in nucleation regime, setting na_n=1'
            na_n=1.0
