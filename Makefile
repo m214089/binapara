@@ -10,3 +10,6 @@ newbinapara: newbinapara.o
 	$(FC) $(FFLAGS) -o $@ $<
 
 newbinapara.o: newbinapara.f90
+
+clean:
+	rm -rf newbinapara newbinapara.o
