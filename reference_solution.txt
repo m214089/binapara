@@ -1,0 +1,15 @@
+ Input:
+  T(K)    RH(%)      SA(cm-3)     csi (s-1)    airn(cm-3)   ipr(s-1cm-3)
+  249.0   40.00000   1.0000E+07   2.0833E-03   2.9486E+19   20.00
+
+ Output, neutral nucleation:
+  J_n (cm-3s-1)  Ntot_n     x         Na_n   rc_n(nm)       Kinetic  rhoatres(cm-3)
+  3.9583E-01     17.98      0.27      4.77   5.6599E-01     F        1.2040E+07
+
+ Output, ion-induced nucleation:
+  J_i (cm-3s-1)  Ntot_i     x         Na_i   rc_i(nm)       Kinetic  Ions(cm-3) 
+  9.1673E+00      1.00      1.00      1.00   4.8700E-01     T        1.4374E+03
+
+ Output, nucleation rates for 1.7nm mob. diam. particles using Lehtinen et al.(2007)
+  J_n17       J_i17
+  2.6146E-02  2.0085E-01
