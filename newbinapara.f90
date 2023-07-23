@@ -397,7 +397,9 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
           & -9.2864597847386694*Log(satratln) + (1.2607421852455602e+3*Log(satratln))/tln & 
           & + 1.3324434472218746e-2*tln*Log(satratln)) !1/cm3
   endif
-  if (tln .lt. 185. .and. tln .gt. 155.) then
+  ! to prevent hole in rhoatres calculation set upper limit to 190 K
+  ! if (tln .lt. 185. .and. tln .gt. 155.) then   
+  if (tln .le. 190. .and. tln .gt. 155.) then
      rhoatres=1.1788859232398459e+5 - 1.0244255702550814e+4*satratln + &
           & 4.6815029684321962e+3*satratln**2 -1.6755952338499657e+2*tln
   endif
