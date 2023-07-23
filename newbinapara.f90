@@ -41,7 +41,7 @@ PROGRAM newbinapara_test_driver
   DOUBLE PRECISION :: rhoatres ! treshold concentration of h2so4 (1/cm^3) for neutral kinetic nucleation
   DOUBLE PRECISION :: GR       ! Particle growth rate (nm/h) 
   DOUBLE PRECISION :: gamma,m,dx,d1,LKK_n,LKK_i ! Factors for Lehtinen et al. param
-  DOUBLE PRECISION :: jnuc_n_17,jnuc_i_17       ! Nucleation rates at 1.7nm mobility diameter
+!unused  DOUBLE PRECISION :: jnuc_n_17,jnuc_i_17       ! Nucleation rates at 1.7nm mobility diameter
 
 
   t=249.0
