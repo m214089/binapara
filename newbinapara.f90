@@ -63,11 +63,11 @@ Program newbinapara_test_driver
   dx=1.4 ! Target size (in geometric diameter = mobility diameter -0.3nm)
   
   d1=2.*rc_n*1.E9 ! diameter of critical cluster in neutral case
-  gamma=max(0.0,1.0/(m+1)*( (dx/(d1))**(m+1)-1)) ! gamma-factor in Lehtinen et al. (neutral)
+  gamma=max(DBLE(0.0),DBLE(1.0)/(m+1)*( (dx/(d1))**(m+1)-1)) ! gamma-factor in Lehtinen et al. (neutral)
   LKK_n=exp(-gamma*d1*cs/gr)   ! Final scaling factor in Lehtinen et al. for neutral case 
 
   d1=2.*rc_i*1.E9 ! diameter of critical cluster in charged case 
-  gamma=max(0.0,1.0/(m+1)*( (dx/(d1))**(m+1)-1)) 
+  gamma=max(DBLE(0.0),DBLE(1.0)/(m+1)*( (dx/(d1))**(m+1)-1)) 
   LKK_i=exp(-gamma*d1*cs/gr)   ! For charged case
 
   write(*,*) 'Input:'
@@ -254,8 +254,8 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
        & - 2.2673492408841294e-6*tli*LOG(satratli)**3 - 4.3948464567032377e-3*LOG(rhoali)&
        & + 5.3305314722492146e-5*tli*LOG(rhoali)
        
-  x_n=MIN(MAX(x_n,1.e-30),1.) 
-  x_i=MIN(MAX(x_i,1.e-30),1.) 
+  x_n=MIN(MAX(x_n,DBLE(1.e-30)),DBLE(1.)) 
+  x_i=MIN(MAX(x_i,DBLE(1.e-30)),DBLE(1.)) 
   
   !Neutral nucleation
   
@@ -294,9 +294,9 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
      rc_n=0.3E-9
   else
      jnuc_n= 2.1361182605986115e-1 + 3.3827029855551838 *tln -3.2423555796175563e-2*tln**2 +  &
-          &  7.0120069477221989e-5*tln**3 +8.0286874752695141/x_n +  &
-          &  -2.6939840579762231e-1*LOG(satratln) +1.6079879299099518*tln*LOG(satratln) +  &
-          &  -1.9667486968141933e-2*tln**2*LOG(satratln) +  &
+          &  7.0120069477221989e-5*tln**3 +8.0286874752695141/x_n -  &
+          &  2.6939840579762231e-1*LOG(satratln) +1.6079879299099518*tln*LOG(satratln) -  &
+          &  1.9667486968141933e-2*tln**2*LOG(satratln) +  &
           &  5.5244755979770844e-5*tln**3*LOG(satratln) + (7.8884704837892468*LOG(satratln))/x_n +  &
           &  4.6374659198909596*LOG(satratln)**2 - 8.2002809894792153e-2*tln*LOG(satratln)**2 +  &
           &  8.5077424451172196e-4*tln**2*LOG(satratln)**2 +  &
@@ -597,7 +597,7 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
      
      ! Small ion concentration in air (1/cm3) (following Dunne et al., 2016)
      ! max function is to avoid n_i to go practically zero at very high J_ion 
-     n_i=max(0.01,(sqrt(xloss**2.0+4.0*recomb*ipr)-xloss)/(2.0*recomb))
+     n_i=max(DBLE(0.01),(sqrt(xloss**2.0+4.0*recomb*ipr)-xloss)/(2.0*recomb))
      
      ! Ion-induced nucleation rate
      ! Min function is to ensure that max function above does not cause J_ion to overshoot 
