@@ -1,4 +1,4 @@
-Program newbinapara_test_driver
+PROGRAM newbinapara_test_driver
 
   !    A Fortran 90 test driver for the parameterization
   !
@@ -17,31 +17,31 @@ Program newbinapara_test_driver
   !    Lehtinen, K. E., Dal Maso, M., Kulmala, M., and Kerminen, V. M., 
   !    Journal of Aerosol Science, 38(9), 988-994, 2007
 
-  double precision :: t        ! temperature in K 
-  double precision :: satrat   ! saturatio ratio of water (between zero and 1)
-  double precision :: rhoa     ! sulfuric acid concentration in 1/cm3
-  double precision :: csi      ! Inverse of lifetime of ions (s-1)
-  double precision :: cs       ! H2SO4 condensation sink (h-1)
-  double precision :: airn     ! Air molecule concentration in (cm-3)
-  double precision :: ipr      ! Ion pair production rate (cm-3 s-1)
-  double precision :: jnuc_n   ! Neutral nucleation rate in 1/cm3s (J>10^-7 1/cm3s)
-  double precision :: ntot_n   ! total number of molecules in the neutral critical cluster
-  double precision :: jnuc_i   ! Charged nucleation rate in 1/cm3s (J>10^-7 1/cm3s)
-  double precision :: ntot_i   ! total number of molecules in the charged critical cluster
-  double precision :: x_n      ! mole fraction of H2SO4 in the neutral critical cluster 
-  double precision :: x_i      ! mole fraction of H2SO4 in the charged critical cluster 
+  DOUBLE PRECISION :: t        ! temperature in K 
+  DOUBLE PRECISION :: satrat   ! saturatio ratio of water (between zero and 1)
+  DOUBLE PRECISION :: rhoa     ! sulfuric acid concentration in 1/cm3
+  DOUBLE PRECISION :: csi      ! Inverse of lifetime of ions (s-1)
+  DOUBLE PRECISION :: cs       ! H2SO4 condensation sink (h-1)
+  DOUBLE PRECISION :: airn     ! Air molecule concentration in (cm-3)
+  DOUBLE PRECISION :: ipr      ! Ion pair production rate (cm-3 s-1)
+  DOUBLE PRECISION :: jnuc_n   ! Neutral nucleation rate in 1/cm3s (J>10^-7 1/cm3s)
+  DOUBLE PRECISION :: ntot_n   ! total number of molecules in the neutral critical cluster
+  DOUBLE PRECISION :: jnuc_i   ! Charged nucleation rate in 1/cm3s (J>10^-7 1/cm3s)
+  DOUBLE PRECISION :: ntot_i   ! total number of molecules in the charged critical cluster
+  DOUBLE PRECISION :: x_n      ! mole fraction of H2SO4 in the neutral critical cluster 
+  DOUBLE PRECISION :: x_i      ! mole fraction of H2SO4 in the charged critical cluster 
                                ! (note that x_n=x_i in nucleation regime) 
-  double precision :: na_n     ! sulfuric acid molecules in the neutral critical cluster
-  double precision :: na_i     ! sulfuric molecules in the charged critical cluster
-  double precision :: rc_n     ! radius of the charged critical cluster in meters 
-  double precision :: rc_i     ! radius of the charged critical cluster in meters 
-  double precision :: n_i      ! number of ion pairs in air (cm-3) 
-  logical  :: kinetic_n        ! true if kinetic neutral nucleation
-  logical  :: kinetic_i        ! true if kinetic ion-induced nucleation
-  double precision :: rhoatres ! treshold concentration of h2so4 (1/cm^3) for neutral kinetic nucleation
-  double precision :: GR       ! Particle growth rate (nm/h) 
-  double precision :: gamma,m,dx,d1,LKK_n,LKK_i ! Factors for Lehtinen et al. param
-  double precision :: jnuc_n_17,jnuc_i_17       ! Nucleation rates at 1.7nm mobility diameter
+  DOUBLE PRECISION :: na_n     ! sulfuric acid molecules in the neutral critical cluster
+  DOUBLE PRECISION :: na_i     ! sulfuric molecules in the charged critical cluster
+  DOUBLE PRECISION :: rc_n     ! radius of the charged critical cluster in meters 
+  DOUBLE PRECISION :: rc_i     ! radius of the charged critical cluster in meters 
+  DOUBLE PRECISION :: n_i      ! number of ion pairs in air (cm-3) 
+  LOGICAL  :: kinetic_n        ! true if kinetic neutral nucleation
+  LOGICAL  :: kinetic_i        ! true if kinetic ion-induced nucleation
+  DOUBLE PRECISION :: rhoatres ! treshold concentration of h2so4 (1/cm^3) for neutral kinetic nucleation
+  DOUBLE PRECISION :: GR       ! Particle growth rate (nm/h) 
+  DOUBLE PRECISION :: gamma,m,dx,d1,LKK_n,LKK_i ! Factors for Lehtinen et al. param
+  DOUBLE PRECISION :: jnuc_n_17,jnuc_i_17       ! Nucleation rates at 1.7nm mobility diameter
 
 
   t=249.0
@@ -51,7 +51,7 @@ Program newbinapara_test_driver
   airn=6.023E23*1.013E5/8.31/t/1.E6
   ipr=20.
 
-  call newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
+  CALL newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
                    &   x_n,x_i,na_n,na_i,rc_n,rc_i,n_i,kinetic_n,kinetic_i,rhoatres)
 
 
@@ -63,31 +63,31 @@ Program newbinapara_test_driver
   dx=1.4 ! Target size (in geometric diameter = mobility diameter -0.3nm)
   
   d1=2.*rc_n*1.E9 ! diameter of critical cluster in neutral case
-  gamma=max(DBLE(0.0),DBLE(1.0)/(m+1)*( (dx/(d1))**(m+1)-1)) ! gamma-factor in Lehtinen et al. (neutral)
-  LKK_n=exp(-gamma*d1*cs/gr)   ! Final scaling factor in Lehtinen et al. for neutral case 
+  gamma=MAX(DBLE(0.0),DBLE(1.0)/(m+1)*( (dx/(d1))**(m+1)-1)) ! gamma-factor in Lehtinen et al. (neutral)
+  LKK_n=EXP(-gamma*d1*cs/gr)   ! Final scaling factor in Lehtinen et al. for neutral case 
 
   d1=2.*rc_i*1.E9 ! diameter of critical cluster in charged case 
-  gamma=max(DBLE(0.0),DBLE(1.0)/(m+1)*( (dx/(d1))**(m+1)-1)) 
-  LKK_i=exp(-gamma*d1*cs/gr)   ! For charged case
+  gamma=MAX(DBLE(0.0),DBLE(1.0)/(m+1)*( (dx/(d1))**(m+1)-1)) 
+  LKK_i=EXP(-gamma*d1*cs/gr)   ! For charged case
 
-  write(*,*) 'Input:'
-  write(*,*) ' T(K)    RH(%)      SA(cm-3)     csi (s-1)    airn(cm-3)   ipr(s-1cm-3)'
-  write(*,'(F7.1,F11.5,3ES13.4,F8.2)') t,satrat*100,rhoa,csi,airn, ipr
-  write(*,*)
-  write(*,*) 'Output, neutral nucleation:'
-  write(*,*) ' J_n (cm-3s-1)  Ntot_n     x         Na_n   rc_n(nm)       Kinetic  rhoatres(cm-3)'
-  write(*,'(ES12.4,3F10.2,ES13.4,L6,ES18.4)') jnuc_n,ntot_n,x_n,na_n,rc_n*1.E9,kinetic_n,rhoatres
-  write(*,*)
-  write(*,*) 'Output, ion-induced nucleation:'
-  write(*,*) ' J_i (cm-3s-1)  Ntot_i     x         Na_i   rc_i(nm)       Kinetic  Ions(cm-3) '
-  write(*,'(ES12.4,3F10.2,ES13.4,L6,ES18.4)') jnuc_i,ntot_i,x_i,na_i,rc_i*1.E9,kinetic_i, n_i
-  write(*,*)
-  write(*,*) 'Output, nucleation rates for 1.7nm mob. diam. particles using Lehtinen et al.(2007)'
-  write(*,*) ' J_n17       J_i17'
-  write(*,'(4ES12.4)') jnuc_n*LKK_n, jnuc_i*LKK_i
+  WRITE(*,*) 'Input:'
+  WRITE(*,*) ' T(K)    RH(%)      SA(cm-3)     csi (s-1)    airn(cm-3)   ipr(s-1cm-3)'
+  WRITE(*,'(F7.1,F11.5,3ES13.4,F8.2)') t,satrat*100,rhoa,csi,airn, ipr
+  WRITE(*,*)
+  WRITE(*,*) 'Output, neutral nucleation:'
+  WRITE(*,*) ' J_n (cm-3s-1)  Ntot_n     x         Na_n   rc_n(nm)       Kinetic  rhoatres(cm-3)'
+  WRITE(*,'(ES12.4,3F10.2,ES13.4,L6,ES18.4)') jnuc_n,ntot_n,x_n,na_n,rc_n*1.E9,kinetic_n,rhoatres
+  WRITE(*,*)
+  WRITE(*,*) 'Output, ion-induced nucleation:'
+  WRITE(*,*) ' J_i (cm-3s-1)  Ntot_i     x         Na_i   rc_i(nm)       Kinetic  Ions(cm-3) '
+  WRITE(*,'(ES12.4,3F10.2,ES13.4,L6,ES18.4)') jnuc_i,ntot_i,x_i,na_i,rc_i*1.E9,kinetic_i, n_i
+  WRITE(*,*)
+  WRITE(*,*) 'Output, nucleation rates for 1.7nm mob. diam. particles using Lehtinen et al.(2007)'
+  WRITE(*,*) ' J_n17       J_i17'
+  WRITE(*,'(4ES12.4)') jnuc_n*LKK_n, jnuc_i*LKK_i
 
 
-end program newbinapara_test_driver
+END PROGRAM newbinapara_test_driver
 
 
 SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
@@ -129,46 +129,46 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
   !----------------------------------------------------
   
   !Global
-  double precision,intent(in) :: t         ! temperature in K 
-  double precision,intent(in) :: satrat    ! saturatio ratio of water (between zero and 1)
-  double precision,intent(in) :: rhoa      ! sulfuric acid concentration in 1/cm3
-  double precision,intent(in) :: csi        ! Ion condensation sink (s-1)
-  double precision,intent(in) :: airn      ! Air molecule concentration in (cm-3)
-  double precision,intent(in) :: ipr       ! Ion pair production rate (cm-3 s-1)
-  double precision,intent(out) :: jnuc_n   ! Neutral nucleation rate in 1/cm3s (J>10^-7 1/cm3s)
-  double precision,intent(out) :: ntot_n   ! total number of molecules in the neutral critical cluster
-  double precision,intent(out) :: jnuc_i   ! Charged nucleation rate in 1/cm3s (J>10^-7 1/cm3s)
-  double precision,intent(out) :: ntot_i   ! total number of molecules in the charged critical cluster
-  double precision,intent(out) :: x_n      ! mole fraction of H2SO4 in the neutral critical cluster 
-  double precision,intent(out) :: x_i      ! mole fraction of H2SO4 in the charged critical cluster 
+  DOUBLE PRECISION,INTENT(in) :: t         ! temperature in K 
+  DOUBLE PRECISION,INTENT(in) :: satrat    ! saturatio ratio of water (between zero and 1)
+  DOUBLE PRECISION,INTENT(in) :: rhoa      ! sulfuric acid concentration in 1/cm3
+  DOUBLE PRECISION,INTENT(in) :: csi        ! Ion condensation sink (s-1)
+  DOUBLE PRECISION,INTENT(in) :: airn      ! Air molecule concentration in (cm-3)
+  DOUBLE PRECISION,INTENT(in) :: ipr       ! Ion pair production rate (cm-3 s-1)
+  DOUBLE PRECISION,INTENT(out) :: jnuc_n   ! Neutral nucleation rate in 1/cm3s (J>10^-7 1/cm3s)
+  DOUBLE PRECISION,INTENT(out) :: ntot_n   ! total number of molecules in the neutral critical cluster
+  DOUBLE PRECISION,INTENT(out) :: jnuc_i   ! Charged nucleation rate in 1/cm3s (J>10^-7 1/cm3s)
+  DOUBLE PRECISION,INTENT(out) :: ntot_i   ! total number of molecules in the charged critical cluster
+  DOUBLE PRECISION,INTENT(out) :: x_n      ! mole fraction of H2SO4 in the neutral critical cluster 
+  DOUBLE PRECISION,INTENT(out) :: x_i      ! mole fraction of H2SO4 in the charged critical cluster 
                                            ! (note that x_n=x_i in nucleation regime) 
-  double precision,intent(out) :: na_n     ! sulfuric acid molecules in the neutral critical cluster
-  double precision,intent(out) :: na_i     ! sulfuric molecules in the charged critical cluster
-  double precision,intent(out) :: rc_n     ! radius of the charged critical cluster in nm 
-  double precision,intent(out) :: rc_i     ! radius of the charged critical cluster in nm 
-  double precision,intent(out) :: n_i      ! number of ion pairs in air (cm-3) 
-  logical,intent(out)  :: kinetic_n        ! true if kinetic neutral nucleation
-  logical,intent(out)  :: kinetic_i        ! true if kinetic ion-induced nucleation
-  double precision,intent(out) :: rhoatres ! treshold concentration of h2so4 (1/cm^3) for neutral kinetic nucleation
+  DOUBLE PRECISION,INTENT(out) :: na_n     ! sulfuric acid molecules in the neutral critical cluster
+  DOUBLE PRECISION,INTENT(out) :: na_i     ! sulfuric molecules in the charged critical cluster
+  DOUBLE PRECISION,INTENT(out) :: rc_n     ! radius of the charged critical cluster in nm 
+  DOUBLE PRECISION,INTENT(out) :: rc_i     ! radius of the charged critical cluster in nm 
+  DOUBLE PRECISION,INTENT(out) :: n_i      ! number of ion pairs in air (cm-3) 
+  LOGICAL,INTENT(out)  :: kinetic_n        ! true if kinetic neutral nucleation
+  LOGICAL,INTENT(out)  :: kinetic_i        ! true if kinetic ion-induced nucleation
+  DOUBLE PRECISION,INTENT(out) :: rhoatres ! treshold concentration of h2so4 (1/cm^3) for neutral kinetic nucleation
 
   ! Local
-  double precision :: x           ! mole fraction of H2SO4 in the critical cluster 
-  double precision :: satratln    ! bounded water saturation ratio for neutral case (between 5.E-6 - 1.0)
-  double precision :: satratli    ! bounded water saturation ratio for ion-induced case (between 1.E-7 - 0.95)
-  double precision :: rhoaln      ! bounded concentration of h2so4 for neutral case (between 10^10 - 10^19 m-3)
-  double precision :: rhoali      ! bounded concentration of h2so4 for ion-induced case (between 10^10 - 10^22 m-3)
-  double precision :: tln         ! bounded temperature for neutral case (between 165-400 K)
-  double precision :: tli         ! bounded temperature for ion-induced case (195-400 K)
-  double precision :: kinrhotresn ! threshold sulfuric acid for neutral kinetic nucleation   
-  double precision :: kinrhotresi ! threshold sulfuric acid for ion-induced kinetic nucleation 
-  double precision :: jnuc_i1     ! Ion-induced rate for n_i=1 cm-3 
-  double precision :: xloss       ! Ion loss rate 
-  double precision :: recomb      ! Ion-ion recombination rate 
+  DOUBLE PRECISION :: x           ! mole fraction of H2SO4 in the critical cluster 
+  DOUBLE PRECISION :: satratln    ! bounded water saturation ratio for neutral case (between 5.E-6 - 1.0)
+  DOUBLE PRECISION :: satratli    ! bounded water saturation ratio for ion-induced case (between 1.E-7 - 0.95)
+  DOUBLE PRECISION :: rhoaln      ! bounded concentration of h2so4 for neutral case (between 10^10 - 10^19 m-3)
+  DOUBLE PRECISION :: rhoali      ! bounded concentration of h2so4 for ion-induced case (between 10^10 - 10^22 m-3)
+  DOUBLE PRECISION :: tln         ! bounded temperature for neutral case (between 165-400 K)
+  DOUBLE PRECISION :: tli         ! bounded temperature for ion-induced case (195-400 K)
+  DOUBLE PRECISION :: kinrhotresn ! threshold sulfuric acid for neutral kinetic nucleation   
+  DOUBLE PRECISION :: kinrhotresi ! threshold sulfuric acid for ion-induced kinetic nucleation 
+  DOUBLE PRECISION :: jnuc_i1     ! Ion-induced rate for n_i=1 cm-3 
+  DOUBLE PRECISION :: xloss       ! Ion loss rate 
+  DOUBLE PRECISION :: recomb      ! Ion-ion recombination rate 
 
   !--- 0) Initializations:
 
-  kinetic_n=.false.
-  kinetic_i=.false.
+  kinetic_n=.FALSE.
+  kinetic_i=.FALSE.
   jnuc_n=0.0
   jnuc_i=0.0
   ntot_n=0.0
@@ -193,52 +193,52 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
   !Boundary values according to parameterization limits   
 
   !Temperature bounds
-  if(t.le.165.) then
-     print *,'Warning: temperature < 165.0 K, using 165.0 K in neutral nucleation calculation'
+  IF(t.LE.165.) THEN
+     PRINT *,'Warning: temperature < 165.0 K, using 165.0 K in neutral nucleation calculation'
      tln=165.0
-  end if
-  if(t.le.195.) then
-     print *,'Warning: temperature < 195.0 K, using 195.0 K in ion-induced nucleation calculation'
+  END IF
+  IF(t.LE.195.) THEN
+     PRINT *,'Warning: temperature < 195.0 K, using 195.0 K in ion-induced nucleation calculation'
      tli=195.0
-  end if
-  if(t.ge.400.) then
-     print *,'Warning: temperature > 400. K, using 400. K in nucleation calculations'
+  END IF
+  IF(t.GE.400.) THEN
+     PRINT *,'Warning: temperature > 400. K, using 400. K in nucleation calculations'
      tln=400.
      tli=400.
-  end if
+  END IF
   
   ! Saturation ratio bounds
-  if(satrat.lt.1.E-7) then
-     print *,'Warning: saturation ratio of water < 1.e-7, using 1.e-7 in ion-induced nucleation calculation'
+  IF(satrat.LT.1.E-7) THEN
+     PRINT *,'Warning: saturation ratio of water < 1.e-7, using 1.e-7 in ion-induced nucleation calculation'
      satratli=1.E-7
-  end if
-  if(satrat.lt.1.E-5) then
-     print *,'Warning: saturation ratio of water < 1.e-5, using 1.e-5 in neutral nucleation calculation'
+  END IF
+  IF(satrat.LT.1.E-5) THEN
+     PRINT *,'Warning: saturation ratio of water < 1.e-5, using 1.e-5 in neutral nucleation calculation'
      satratln=1.E-5
-  end if
-  if(satrat.gt.0.95) then
-     print *,'Warning: saturation ratio of water > 0.95, using 0.95 in ion-induced nucleation calculation'
+  END IF
+  IF(satrat.GT.0.95) THEN
+     PRINT *,'Warning: saturation ratio of water > 0.95, using 0.95 in ion-induced nucleation calculation'
      satratli=0.95
-  end if
-  if(satrat.gt.1.0) then
-     print *,'Warning: saturation ratio of water > 1 using 1 in neutral nucleation calculation'
+  END IF
+  IF(satrat.GT.1.0) THEN
+     PRINT *,'Warning: saturation ratio of water > 1 using 1 in neutral nucleation calculation'
      satratln=1.0
-  end if
+  END IF
   
   ! Sulfuric acid concentration bounds
-  if(rhoa.le.1.e4) then
-     print *,'Warning: sulfuric acid < 1e4 1/cm3, using 1e4 1/cm3 in nucleation calculation'
+  IF(rhoa.LE.1.e4) THEN
+     PRINT *,'Warning: sulfuric acid < 1e4 1/cm3, using 1e4 1/cm3 in nucleation calculation'
      rhoaln=1.e4
      rhoali=1.e4
-  end if
-  if(rhoa.gt.1.e13) then
-     print *,'Warning: sulfuric acid > 1e13 1/cm3, using 1e13 1/cm3 in neutral nucleation calculation'
+  END IF
+  IF(rhoa.GT.1.e13) THEN
+     PRINT *,'Warning: sulfuric acid > 1e13 1/cm3, using 1e13 1/cm3 in neutral nucleation calculation'
      rhoaln=1.e13
-  end if
-  if(rhoa.gt.1.e16) then
-     print *,'Warning: sulfuric acid concentration > 1e16 1/cm3, using 1e16 1/cm3 in ion-induced nucleation calculation'
+  END IF
+  IF(rhoa.GT.1.e16) THEN
+     PRINT *,'Warning: sulfuric acid concentration > 1e16 1/cm3, using 1e16 1/cm3 in ion-induced nucleation calculation'
      rhoali=1.e16
-  end if
+  END IF
   
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
@@ -260,39 +260,39 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
   !Neutral nucleation
   
   !Kinetic limit check
-  if (satratln .ge. 1.e-2 .and. satratln .le. 1.) then
-     kinrhotresn=exp(7.8920778706888086e+1 + 7.3665492897447082*satratln - 1.2420166571163805e+4/tln &
+  IF (satratln .GE. 1.e-2 .AND. satratln .LE. 1.) THEN
+     kinrhotresn=EXP(7.8920778706888086e+1 + 7.3665492897447082*satratln - 1.2420166571163805e+4/tln &
           & + (-6.1831234251470971e+2*satratln)/tln - 2.4501159970109945e-2*tln &
           & -1.3463066443605762e-2*satratln*tln + 8.3736373989909194e-06*tln**2   &
-          & -1.4673887785408892*Log(satratln) + (-3.2141890006517094e+1*Log(satratln))/tln & 
-          & + 2.7137429081917556e-3*tln*Log(satratln)) !1/cm3     
-     if(kinrhotresn.lt.rhoaln) kinetic_n=.true.
-  endif
-  if (satratln .ge. 1.e-4  .and. satratln .lt. 1.e-2) then     
-     kinrhotresn=exp(7.9074383049843647e+1 - 2.8746005462158347e+1*satratln - 1.2070272068458380e+4/tln &
+          & -1.4673887785408892*LOG(satratln) + (-3.2141890006517094e+1*LOG(satratln))/tln & 
+          & + 2.7137429081917556e-3*tln*LOG(satratln)) !1/cm3     
+     IF(kinrhotresn.LT.rhoaln) kinetic_n=.TRUE.
+  ENDIF
+  IF (satratln .GE. 1.e-4  .AND. satratln .LT. 1.e-2) THEN     
+     kinrhotresn=EXP(7.9074383049843647e+1 - 2.8746005462158347e+1*satratln - 1.2070272068458380e+4/tln &
           & + (-5.9205040320056632e+3*satratln)/tln - 2.4800372593452726e-2*tln &
           & -4.3983007681295948e-2*satratln*tln + 2.5943854791342071e-5*tln**2   &
-          & -2.3141363245211317*Log(satratln) + (9.9186787997857735e+1*Log(satratln))/tln & 
-          & + 5.6819382556144681e-3*tln*Log(satratln)) !1/cm3
-     if(kinrhotresn.lt.rhoaln) kinetic_n=.true.
-  endif
-  if (satratln .ge. 5.e-6  .and. satratln .lt. 1.e-4) then
-     kinrhotresn=exp(8.5599712000361677e+1 + 2.7335119660796581e+3*satratln - 1.1842350246291651e+4/tln &
+          & -2.3141363245211317*LOG(satratln) + (9.9186787997857735e+1*LOG(satratln))/tln & 
+          & + 5.6819382556144681e-3*tln*LOG(satratln)) !1/cm3
+     IF(kinrhotresn.LT.rhoaln) kinetic_n=.TRUE.
+  ENDIF
+  IF (satratln .GE. 5.e-6  .AND. satratln .LT. 1.e-4) THEN
+     kinrhotresn=EXP(8.5599712000361677e+1 + 2.7335119660796581e+3*satratln - 1.1842350246291651e+4/tln &
           & + (-1.2439843468881438e+6*satratln)/tln - 5.4536964974944230e-2*tln &
           & + 5.0886987425326087*satratln*tln + 7.1964722655507067e-5*tln**2   &
-          & -2.4472627526306372*Log(satratln) + (1.7561478001423779e+2*Log(satratln))/tln & 
-          & + 6.2640132818141811e-3*tln*Log(satratln)) !1/cm3
-     if(kinrhotresn.lt.rhoaln) kinetic_n=.true. 
-  endif
+          & -2.4472627526306372*LOG(satratln) + (1.7561478001423779e+2*LOG(satratln))/tln & 
+          & + 6.2640132818141811e-3*tln*LOG(satratln)) !1/cm3
+     IF(kinrhotresn.LT.rhoaln) kinetic_n=.TRUE. 
+  ENDIF
   
-  if(kinetic_n) then    
+  IF(kinetic_n) THEN    
      ! Dimer formation rate
-     jnuc_n=1.E6*(2.*0.3E-9)**2.*sqrt(8.*3.141593*1.38E-23*(1./(1.661e-27*98.07)+1./(1.661e-27*98.07)))/2.*sqrt(t)*rhoa**2.
+     jnuc_n=1.E6*(2.*0.3E-9)**2.*SQRT(8.*3.141593*1.38E-23*(1./(1.661e-27*98.07)+1./(1.661e-27*98.07)))/2.*SQRT(t)*rhoa**2.
      ntot_n=1. !set to 1 
      na_n=1.   ! The critical cluster contains one molecule, but the produced cluster contains 2 molecules
      x_n=na_n/ntot_n  ! so also set this to 1
      rc_n=0.3E-9
-  else
+  ELSE
      jnuc_n= 2.1361182605986115e-1 + 3.3827029855551838 *tln -3.2423555796175563e-2*tln**2 +  &
           &  7.0120069477221989e-5*tln**3 +8.0286874752695141/x_n -  &
           &  2.6939840579762231e-1*LOG(satratln) +1.6079879299099518*tln*LOG(satratln) -  &
@@ -369,75 +369,75 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
      rc_n=EXP(-22.378268374023630+0.44462953606125100*x_n+0.33499495707849131*LOG(ntot_n)) !in meters
      
      na_n=x_n*ntot_n
-     if (na_n .lt. 1.) then
-        print *, 'Warning: number of acid molecules < 1 in nucleation regime, setting na_n=1'
+     IF (na_n .LT. 1.) THEN
+        PRINT *, 'Warning: number of acid molecules < 1 in nucleation regime, setting na_n=1'
         na_n=1.0
-     endif
-  endif
+     ENDIF
+  ENDIF
   
   ! Set the neutral nucleation rate to 0.0 if less than 1.0e-7      
-  if(jnuc_n.lt.1.e-7) then
+  IF(jnuc_n.LT.1.e-7) THEN
      jnuc_n=0.0
-  endif
+  ENDIF
   
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
   ! Threshold neutral nucleation rate (j > 1/cm3s) parameterization (can be commented out if not needed)
-  if (tln .ge. 310.) then
-     rhoatres=exp(-2.8220714121794250 + 1.1492362322651116e+1*satratln -3.3034839106184218e+3/tln &
+  IF (tln .GE. 310.) THEN
+     rhoatres=EXP(-2.8220714121794250 + 1.1492362322651116e+1*satratln -3.3034839106184218e+3/tln &
           & + (-7.1828571490168133e+2*satratln)/tln + 1.4649510835204091e-1*tln &
           & -3.0442736551916524e-2*satratln*tln -9.3258567137451497e-5*tln**2   &
-          & -1.1583992506895649e+1*Log(satratln) + (1.5184848765906165e+3*Log(satratln))/tln & 
-          & + 1.8144983916747057e-2*tln*Log(satratln)) !1/cm3
-  endif
-  if (tln .gt. 190. .and. tln .lt. 310.) then
-     rhoatres=exp(-3.1820396091231999e+2 + 7.2451289153199676*satratln + 2.6729355170089486e+4/tln &
+          & -1.1583992506895649e+1*LOG(satratln) + (1.5184848765906165e+3*LOG(satratln))/tln & 
+          & + 1.8144983916747057e-2*tln*LOG(satratln)) !1/cm3
+  ENDIF
+  IF (tln .GT. 190. .AND. tln .LT. 310.) THEN
+     rhoatres=EXP(-3.1820396091231999e+2 + 7.2451289153199676*satratln + 2.6729355170089486e+4/tln &
           & + (-7.1492506076423069e+2*satratln)/tln + 1.2617291148391978*tln &
           & - 1.6438112080468487e-2*satratln*tln -1.4185518234553220e-3*tln**2   &
-          & -9.2864597847386694*Log(satratln) + (1.2607421852455602e+3*Log(satratln))/tln & 
-          & + 1.3324434472218746e-2*tln*Log(satratln)) !1/cm3
-  endif
+          & -9.2864597847386694*LOG(satratln) + (1.2607421852455602e+3*LOG(satratln))/tln & 
+          & + 1.3324434472218746e-2*tln*LOG(satratln)) !1/cm3
+  ENDIF
   ! to prevent hole in rhoatres calculation set upper limit to 190 K
   ! if (tln .lt. 185. .and. tln .gt. 155.) then   
-  if (tln .le. 190. .and. tln .gt. 155.) then
+  IF (tln .LE. 190. .AND. tln .GT. 155.) THEN
      rhoatres=1.1788859232398459e+5 - 1.0244255702550814e+4*satratln + &
           & 4.6815029684321962e+3*satratln**2 -1.6755952338499657e+2*tln
-  endif
+  ENDIF
   
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
   
   ! Ion-induced nucleation parameterization 
  
-  if(ipr.gt.0.0) then ! if the ion production rate is above zero
+  IF(ipr.GT.0.0) THEN ! if the ion production rate is above zero
      
      ! Calculate the ion induced nucleation rate wrt. concentration of 1 ion/cm3
      
-     kinrhotresi = 5.3742280876674478e1  - 6.6837931590012266e-3 *log(satratli)**(-2) &
-          & - 1.0142598385422842e-01 * log(satratli)**(-1) - 6.4170597272606873e+00 * log(satratli) &
-          & - 6.4315798914824518e-01 * log(satratli)**2 - 2.4428391714772721e-02 * log(satratli)**3 & 
-          & - 3.5356658734539019e-04 * log(satratli)**4 + 2.5400015099140506e-05 * tli * log(satratli)**(-2) & 
-          & - 2.7928900816637790e-04 * tli * log(satratli)**(-1) + 4.4108573484923690e-02 * tli * log(satratli) &
-          & + 6.3943789012475532e-03 * tli * log(satratli)**(2) + 2.3164296174966580e-04 * tli * log(satratli)**(3) &
-          & + 3.0372070669934950e-06 * tli * log(satratli)**4 + 3.8255873977423475e-06 * tli**2 * log(satratli)**(-1) &
-          & - 1.2344793083561629e-04 * tli**2 * log(satratli) - 1.7959048869810192e-05 * tli**2 * log(satratli)**(2) &
-          & - 3.2165622558722767e-07 * tli**2 * log(satratli)**3 - 4.7136923780988659e-09 * tli**3 * log(satratli)**(-1) &
-          & + 1.1873317184482216e-07 * tli**3 * log(satratli) + 1.5685860354866621e-08 * tli**3 * log(satratli)**2 &
+     kinrhotresi = 5.3742280876674478e1  - 6.6837931590012266e-3 *LOG(satratli)**(-2) &
+          & - 1.0142598385422842e-01 * LOG(satratli)**(-1) - 6.4170597272606873e+00 * LOG(satratli) &
+          & - 6.4315798914824518e-01 * LOG(satratli)**2 - 2.4428391714772721e-02 * LOG(satratli)**3 & 
+          & - 3.5356658734539019e-04 * LOG(satratli)**4 + 2.5400015099140506e-05 * tli * LOG(satratli)**(-2) & 
+          & - 2.7928900816637790e-04 * tli * LOG(satratli)**(-1) + 4.4108573484923690e-02 * tli * LOG(satratli) &
+          & + 6.3943789012475532e-03 * tli * LOG(satratli)**(2) + 2.3164296174966580e-04 * tli * LOG(satratli)**(3) &
+          & + 3.0372070669934950e-06 * tli * LOG(satratli)**4 + 3.8255873977423475e-06 * tli**2 * LOG(satratli)**(-1) &
+          & - 1.2344793083561629e-04 * tli**2 * LOG(satratli) - 1.7959048869810192e-05 * tli**2 * LOG(satratli)**(2) &
+          & - 3.2165622558722767e-07 * tli**2 * LOG(satratli)**3 - 4.7136923780988659e-09 * tli**3 * LOG(satratli)**(-1) &
+          & + 1.1873317184482216e-07 * tli**3 * LOG(satratli) + 1.5685860354866621e-08 * tli**3 * LOG(satratli)**2 &
           & - 1.4329645891059557e+04 * tli**(-1) + 1.3842599842575321e-01 * tli &
           & - 4.1376265912842938e-04 * tli**(2) + 3.9147639775826004e-07 * tli**3
      
-     kinrhotresi=exp(kinrhotresi) !1/cm3
+     kinrhotresi=EXP(kinrhotresi) !1/cm3
      
-     if(kinrhotresi.lt.rhoali) kinetic_i=.true.
+     IF(kinrhotresi.LT.rhoali) kinetic_i=.TRUE.
      
-     if(kinetic_i) then    
-        jnuc_i1=1.0E6*(0.3E-9 + 0.487E-9)**2.*sqrt(8.*3.141593*1.38E-23*(1./(1.661e-27*98.07)+1./(1.661e-27*98.07)))*&
+     IF(kinetic_i) THEN    
+        jnuc_i1=1.0E6*(0.3E-9 + 0.487E-9)**2.*SQRT(8.*3.141593*1.38E-23*(1./(1.661e-27*98.07)+1./(1.661e-27*98.07)))*&
              &sqrt(tli)*rhoali !1/cm3s  
         ntot_i=1. !set to 1 
         na_i=1.
         x_i=na_i/ntot_i  ! so also set this to 1
         rc_i=0.487E-9
-     else
+     ELSE
         jnuc_i1 = 3.0108954259038608e+01+tli*6.1176722090512577e+01+(tli**2)*8.7240333618891663e-01+(tli**3)* &
              & -4.6191788649375719e-03+(tli**(-1))*8.3537059107024481e-01 + & 
              & (1.5028549216690628e+01+tli*-1.9310989753720623e-01+(tli**2)*8.0155514634860480e-04+(tli**3)* &
@@ -489,7 +489,7 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
              & 2.6797249816144721e-05 + (tli**(-1)) * 5.5045672663909995e-01)* satratli
         jnuc_i1=EXP(jnuc_i1)
         
-        ntot_i = abs((-4.8324296064013375e+04 +  tli * 5.0469120697428906e+02 +  (tli**2) * -1.1528940488496042e+00 + &
+        ntot_i = ABS((-4.8324296064013375e+04 +  tli * 5.0469120697428906e+02 +  (tli**2) * -1.1528940488496042e+00 + &
              & (tli**(-1)) * -8.6892744676239192e+02 + (tli**(3)) * 4.0030302028120469e-04) + &
              & (-6.7259105232039847e+03 +  tli * 1.9197488157452008e+02 +  (tli**2) * -1.3602976930126354e+00 + &
              & (tli**(-1)) * -1.1212637938360332e+02 + (tli**(3)) * 2.8515597265933207e-03) * &
@@ -582,31 +582,31 @@ SUBROUTINE newbinapara(t,satrat,rhoa,csi,airn,ipr,jnuc_n,ntot_n,jnuc_i,ntot_i,&
              & (tli**3) * 2.2260187650412392e-20)* LOG(satratli)**3 * LOG(rhoali)
                     
         na_i=x_i*ntot_i
-        if (na_i .lt. 1.) then
-           print *, 'Warning: number of acid molecules < 1 in nucleation regime, setting na_n=1'
+        IF (na_i .LT. 1.) THEN
+           PRINT *, 'Warning: number of acid molecules < 1 in nucleation regime, setting na_n=1'
            na_n=1.0
-        endif
-     endif
+        ENDIF
+     ENDIF
     
      jnuc_i=jnuc_i1 
      ! Ion loss rate (1/s)
      xloss=csi+jnuc_i
      
      ! Recombination (here following Brasseur and Chatel, 1983)   
-     recomb=6.0e-8*sqrt(300./tli)+6.0e-26*airn*(300./tli)**4
+     recomb=6.0e-8*SQRT(300./tli)+6.0e-26*airn*(300./tli)**4
      
      ! Small ion concentration in air (1/cm3) (following Dunne et al., 2016)
      ! max function is to avoid n_i to go practically zero at very high J_ion 
-     n_i=max(DBLE(0.01),(sqrt(xloss**2.0+4.0*recomb*ipr)-xloss)/(2.0*recomb))
+     n_i=MAX(DBLE(0.01),(SQRT(xloss**2.0+4.0*recomb*ipr)-xloss)/(2.0*recomb))
      
      ! Ion-induced nucleation rate
      ! Min function is to ensure that max function above does not cause J_ion to overshoot 
-     jnuc_i=min(ipr,n_i*jnuc_i1)
+     jnuc_i=MIN(ipr,n_i*jnuc_i1)
      ! Set the ion-induced nucleation rate to 0.0 if less than 1.0e-7      
-     if(jnuc_i.lt.1.e-7) then
+     IF(jnuc_i.LT.1.e-7) THEN
         jnuc_i=0.0
-     endif
+     ENDIF
 
-  endif
+  ENDIF
   
 END SUBROUTINE newbinapara
